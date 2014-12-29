@@ -61,7 +61,10 @@ function printBoard() {
 
 function main() {
 	initBoard
-	printBoard
+	while true; do
+		printBoard
+		key=$(readKey)
+	done
 }
 
 main $@
