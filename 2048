@@ -60,7 +60,8 @@ function printBoard() {
 }
 
 function main() {
-	:
+	initBoard
+	printBoard
 }
 
 main $@
