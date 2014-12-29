@@ -8,7 +8,7 @@ boardColumns=4
 function initBoard() {
 	for i in $(seq 1 $boardRows); do
 		for j in $(seq 1 $boardColumns); do
-			board[$i,$j]=0
+			board[$i,$j]=" "
 		done
 	done
 }
