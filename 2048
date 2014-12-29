@@ -11,6 +11,13 @@ function initBoard() {
 			board[$i,$j]=" "
 		done
 	done
+	for p in $(seq 1 2); do
+		# FIXME: Same values of x and y in second iteration.
+		local x=$(($RANDOM % $boardColumns + 1))
+		local y=$(($RANDOM % $boardRows + 1))
+		local n=$(randValue)
+		board[$x,$y]=$n
+	done
 }
 
 function readKey() {
