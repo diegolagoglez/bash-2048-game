@@ -1,0 +1,37 @@
+#!/bin/bash
+
+function readKey() {
+	read -sN1 key
+	read -sN1 -t 0.0001 k1
+	read -sN1 -t 0.0001 k2
+	read -sN1 -t 0.0001 k3
+	key+=${k1}${k2}${k3}
+	case "$key" in
+		$'\e[A')
+			echo '↑';
+		;;
+		$'\e[B')
+			echo '↓';
+		;;
+		$'\e[C')
+			echo '→';
+		;;
+		$'\e[D')
+			echo "←";
+		;;
+	esac
+}
+
+function randValue() {
+	:
+}
+
+function printBoard() {
+	:
+}
+
+function main() {
+	:
+}
+
+main $@
