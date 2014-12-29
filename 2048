@@ -39,6 +39,9 @@ function readKey() {
 		$'\e[D')
 			echo "←";
 		;;
+		*)
+			echo $key
+		;;
 	esac
 }
 
