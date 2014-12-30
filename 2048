@@ -187,14 +187,14 @@ function printBoard() {
 	if [ "$clear" == "yes" ]; then
 		clear
 	fi
-	echo "-------------------------"
+	echo "-----------------------------"
 	for i in $(seq 1 $boardRows); do
 		echo -n "|"
 		for j in $(seq 1 $boardColumns); do
-			printf "%4s " ${board[$i,$j]}
+			printf " %4s " ${board[$i,$j]}
 			echo -n "|"
 		done
-		echo -e "\n-------------------------"
+		echo -e "\n-----------------------------"
 	done
 }
 
