@@ -60,6 +60,7 @@ function moveVertically() {
 		echo "FATAL(moveVertically): Invalid direction: $direction" 1>&2
 		exit 1
 	fi
+	local moveCount=0
 	for i in $(seq $start $direction $end); do
 		if [ "${board[$i,$col]}" != " " ]; then
 			local next=$(($i - $direction))
@@ -67,9 +68,11 @@ function moveVertically() {
 				board[$next,$col]=${board[$(($next + $direction)),$col]}
 				board[$(($next + $direction)),$col]=" "
 				next=$(($next - $direction))
+				moveCount=$(($moveCount+1))
 			done
 		fi
 	done
+	return $moveCount
 }
 
 function sumVertically() {
@@ -85,28 +88,41 @@ function sumVertically() {
 		echo "FATAL(sumVertically): Invalid direction: $direction" 1>&2
 		exit 1
 	fi
+	local moveCount=0
 	for j in $(seq $start $direction $end); do
 		if [ "${board[$j,$col]}" != " " -a $(($j + $direction)) -lt $(($start + $end)) -a "${board[$(($j + $direction)),$col]}" == "${board[$j,$col]}" ]; then
 			board[$j,$col]=$((${board[$j,$col]} + ${board[$(($j + $direction)),$col]}))
 			board[$(($j + $direction)),$col]=" "
+			moveCount=$(($moveCount+1))
 		fi
 	done
+	return $moveCount
 }
 
 function moveUp() {
+	local steps=0
 	for theColumn in $(seq 1 $boardColumns); do
 		moveVertically $theColumn 1
+		steps=$(($steps+$?))
 		sumVertically $theColumn 1
+		steps=$(($steps+$?))
 		moveVertically $theColumn 1
+		steps=$(($steps+$?))
 	done
+	return $steps
 }
 
 function moveDown() {
+	local steps=0
 	for theColumn in $(seq 1 $boardColumns); do
 		moveVertically $theColumn -1
+		steps=$(($steps+$?))
 		sumVertically $theColumn -1
+		steps=$(($steps+$?))
 		moveVertically $theColumn -1
+		steps=$(($steps+$?))
 	done
+	return $steps
 }
 
 function moveHorizontally() {
@@ -122,6 +138,7 @@ function moveHorizontally() {
 		echo "FATAL(moveHorizontally): Invalid direction: $direction" 1>&2
 		exit 1
 	fi
+	local moveCount=0
 	for j in $(seq $start $direction $end); do
 		if [ "${board[$row,$j]}" != " " ]; then
 			local next=$(($j - $direction))
@@ -129,9 +146,11 @@ function moveHorizontally() {
 				board[$row,$next]=${board[$row,$(($next + $direction))]}
 				board[$row,$(($next + $direction))]=" "
 				next=$(($next - $direction))
+				moveCount=$(($moveCount+1))
 			done
 		fi
 	done
+	return $moveCount
 }
 
 function sumHorizontally() {
@@ -147,28 +166,41 @@ function sumHorizontally() {
 		echo "FATAL(sumHorizontally): Invalid direction: $direction" 1>&2
 		exit 1
 	fi
+	local moveCount=0
 	for j in $(seq $start $direction $end); do
 		if [ "${board[$row,$j]}" != " " -a $(($j + $direction)) -lt $(($start + $end)) -a "${board[$row,$(($j + $direction))]}" == "${board[$row,$j]}" ]; then
 			board[$row,$j]=$((${board[$row,$j]} + ${board[$row,$(($j + $direction))]}))
 			board[$row,$(($j + $direction))]=" "
+			moveCount=$(($moveCount+1))
 		fi
 	done
+	return $moveCount
 }
 
 function moveRight() {
+	local steps=0
 	for theRow in $(seq 1 $boardRows); do
 		moveHorizontally $theRow -1
+		steps=$(($steps+$?))
 		sumHorizontally $theRow -1
+		steps=$(($steps+$?))
 		moveHorizontally $theRow -1
+		steps=$(($steps+$?))
 	done
+	return $steps
 }
 
 function moveLeft() {
+	local steps=0
 	for theRow in $(seq 1 $boardRows); do
 		moveHorizontally $theRow 1
+		steps=$(($steps+$?))
 		sumHorizontally $theRow 1
+		steps=$(($steps+$?))
 		moveHorizontally $theRow 1
+		steps=$(($steps+$?))
 	done
+	return $steps
 }
 
 function newBoardRandomValue() {
@@ -221,15 +253,19 @@ function processKey() {
 	case "$1" in
 		"↑")
 			moveUp
+			return $?
 		;;
 		"↓")
 			moveDown
+			return $?
 		;;
 		"→")
 			moveRight
+			return $?
 		;;
 		"←")
 			moveLeft
+			return $?
 		;;
 		"n")
 			initBoard
@@ -283,7 +319,10 @@ function main() {
 		printBoard
 		key=$(readKey)
 		processKey $key
-		newBoardRandomValue
+		local result=$?
+		if [ $result -ne 0 ]; then
+			newBoardRandomValue
+		fi
 		checkNoMoreMoves
 	done
 }
