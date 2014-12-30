@@ -2,6 +2,9 @@
 
 declare -A board
 
+version=0.0.1
+date="2014-12-30"
+
 clear=no
 pretty=no
 colored=no
@@ -268,7 +271,7 @@ function checkLimit() {
 }
 
 function showCLIHelp() {
-	echo "2048 Game written in BASH"
+	echo "2048 Game written in BASH v$version [$date]"
 	echo "Diego Lago González <diego.lago.gonzalez@gmail.com>"
 	echo "Usage: $(basename $0) [options]"
 	echo "Options:"
@@ -286,7 +289,7 @@ function showCLIHelp() {
 function showHelp() {
 	if [ -z "$1" ]; then
 		echo
-		echo "2048 Game written in BASH"
+		echo "2048 Game written in BASH v$version [$date]"
 		echo "Diego Lago González <diego.lago.gonzalez@gmail.com>"
 	fi
 	echo
