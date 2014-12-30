@@ -10,6 +10,7 @@ clear=no
 pretty=no
 colored=no
 limit=0
+score=0
 
 boardRows=4
 boardColumns=4
@@ -96,6 +97,7 @@ function sumVertically() {
 		if [ "${board[$j,$col]}" != " " -a $(($j + $direction)) -lt $(($start + $end)) -a "${board[$(($j + $direction)),$col]}" == "${board[$j,$col]}" ]; then
 			if [ -z "$dryrun" ]; then
 				board[$j,$col]=$((${board[$j,$col]} + ${board[$(($j + $direction)),$col]}))
+				score=$(($score + ${board[$j,$col]}))
 				board[$(($j + $direction)),$col]=" "
 			fi
 			moveCount=$(($moveCount+1))
@@ -177,6 +179,7 @@ function sumHorizontally() {
 		if [ "${board[$row,$j]}" != " " -a $(($j + $direction)) -lt $(($start + $end)) -a "${board[$row,$(($j + $direction))]}" == "${board[$row,$j]}" ]; then
 			if [ -z "$dryrun" ]; then
 				board[$row,$j]=$((${board[$row,$j]} + ${board[$row,$(($j + $direction))]}))
+				score=$(($score + ${board[$row,$j]}))
 				board[$row,$(($j + $direction))]=" "
 			fi
 			moveCount=$(($moveCount+1))
@@ -400,6 +403,7 @@ function printBoard() {
 	else
 		echo -e "\n+------+------+------+------+"
 	fi
+	printf "    Score: %12s\n" $score
 }
 
 function processOptions() {
