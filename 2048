@@ -338,14 +338,14 @@ function showHelp() {
 		echo "Diego Lago González <diego.lago.gonzalez@gmail.com>"
 	fi
 	echo
-	echo "Keys:"
-	echo "Use arrow keys to move numbers."
-	echo "Use 'n' to create a new game."
-	echo "Use 'c' to switch between clear/no clear."
-	echo "Use 'q' to quit."
-	echo "Use 'h' to show this help."
+	echo "  Keys:"
+	echo "    Use arrow keys to move numbers."
+	echo "    Use 'n' to create a new game."
+	echo "    Use 'c' to switch between clear/no clear."
+	echo "    Use 'q' to quit."
+	echo "    Use 'h' to show this help."
+	echo
 	if [ -z "$1" ]; then
-		echo
 		read -n 1 -p "Press any key to continue..."
 		echo
 	fi
