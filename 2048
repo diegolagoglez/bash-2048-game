@@ -18,6 +18,18 @@ max_score_file="$HOME/.cache/2048.max-score"
 boardRows=4
 boardColumns=4
 
+function saveGame() {
+	local row=""
+	echo -n > "$game_file"
+	for i1 in $(seq 1 $boardRows); do
+		for j1 in $(seq 1 $boardColumns); do
+			row+="${board[$i1,$j1]},"
+		done
+		echo $row >> "$game_file"
+		row=""
+	done
+}
+
 function initBoard() {
 	for x in $(seq 1 $boardRows); do
 		for y in $(seq 1 $boardColumns); do
