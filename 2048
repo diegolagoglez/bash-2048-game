@@ -72,15 +72,40 @@ function moveVertically() {
 	done
 }
 
+function sumVertically() {
+	local col=$1
+	local direction=$2
+	if [ $direction == 1 ]; then
+		local start=1
+		local end=$boardRows
+	elif [ $direction == -1 ]; then
+		local start=$boardRows
+		local end=1
+	else
+		echo "FATAL(sumVertically): Invalid direction: $direction" 1>&2
+		exit 1
+	fi
+	for j in $(seq $start $direction $end); do
+		if [ "${board[$j,$col]}" != " " -a $(($j + $direction)) -lt $(($start + $end)) -a "${board[$(($j + $direction)),$col]}" == "${board[$j,$col]}" ]; then
+			board[$j,$col]=$((${board[$j,$col]} + ${board[$(($j + $direction)),$col]}))
+			board[$(($j + $direction)),$col]=" "
+		fi
+	done
+}
+
 function moveUp() {
-	for i in $(seq 1 $boardColumns); do
-		moveVertically $i 1
+	for theColumn in $(seq 1 $boardColumns); do
+		moveVertically $theColumn 1
+		sumVertically $theColumn 1
+		moveVertically $theColumn 1
 	done
 }
 
 function moveDown() {
-	for i in $(seq 1 $boardColumns); do
-		moveVertically $i -1
+	for theColumn in $(seq 1 $boardColumns); do
+		moveVertically $theColumn -1
+		sumVertically $theColumn -1
+		moveVertically $theColumn -1
 	done
 }
 
@@ -131,19 +156,34 @@ function sumHorizontally() {
 }
 
 function moveRight() {
-	for i in $(seq 1 $boardRows); do
-		moveHorizontally $i -1
-		sumHorizontally $i -1
-		moveHorizontally $i -1
+	for theRow in $(seq 1 $boardRows); do
+		moveHorizontally $theRow -1
+		sumHorizontally $theRow -1
+		moveHorizontally $theRow -1
 	done
 }
 
 function moveLeft() {
-	for i in $(seq 1 $boardRows); do
-		moveHorizontally $i 1
-		sumHorizontally $i 1
-		moveHorizontally $i 1
+	for theRow in $(seq 1 $boardRows); do
+		moveHorizontally $theRow 1
+		sumHorizontally $theRow 1
+		moveHorizontally $theRow 1
 	done
+}
+
+function newBoardRandomValue() {
+	local x=$(($RANDOM % $boardColumns + 1))
+	local y=$(($RANDOM % $boardRows + 1))
+	while [ "${board[$x,$y]}" != " " ]; do
+		# FIXME: This could be an infinite loop.
+		local x=$(($RANDOM % $boardColumns + 1))
+		local y=$(($RANDOM % $boardRows + 1))
+	done
+	board[$x,$y]=$(randValue)
+}
+
+function checkNoMoreMoves() {
+	:
 }
 
 function showCLIHelp() {
