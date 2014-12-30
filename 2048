@@ -53,12 +53,41 @@ function moveDown() {
 	echo down
 }
 
+function moveHorizontally() {
+	local row=$1
+	local direction=$2
+	if [ $direction == 1 ]; then
+		local start=1
+		local end=$boardColumns
+	elif [ $direction == -1 ]; then
+		local start=$boardColumns
+		local end=1
+	else
+		echo "FATAL: Invalid direction: $direction" 1>&2
+		exit 1
+	fi
+	for j in $(seq $start $direction $end); do
+		if [ "${board[$row,$j]}" != " " ]; then
+			local next=$(($j - $direction))
+			while [ "${board[$row,$next]}" == " " ]; do
+				board[$row,$next]=${board[$row,$(($next + $direction))]}
+				board[$row,$(($next + $direction))]=" "
+				next=$(($next - $direction))
+			done
+		fi
+	done
+}
+
 function moveRight() {
-	echo right
+	for i in $(seq 1 $boardRows); do
+		moveHorizontally $i -1
+	done
 }
 
 function moveLeft() {
-	echo left
+	for i in $(seq 1 $boardRows); do
+		moveHorizontally $i 1
+	done
 }
 
 function showHelp() {
