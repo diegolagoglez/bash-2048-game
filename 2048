@@ -61,6 +61,19 @@ function moveLeft() {
 	echo left
 }
 
+function showHelp() {
+	echo
+	echo "2048 Game written in BASH"
+	echo "Diego Lago González <diego.lago.gonzalez@gmail.com>"
+	echo
+	echo "Keys:"
+	echo "Use arrow keys to move numbers."
+	echo "Use 'n' to create a new game."
+	echo "Use 'q' to quit."
+	echo "Use 'h' to show this help."
+	echo
+}
+
 function processKey() {
 	case "$1" in
 		"↑")
@@ -74,6 +87,9 @@ function processKey() {
 		;;
 		"←")
 			moveLeft
+		;;
+		"h")
+			showHelp
 		;;
 		"q")
 			exit 1
