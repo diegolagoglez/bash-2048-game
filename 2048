@@ -163,6 +163,9 @@ function processKey() {
 		"←")
 			moveLeft
 		;;
+		"n")
+			initBoard
+		;;
 		"h")
 			showHelp
 		;;
