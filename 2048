@@ -12,6 +12,9 @@ colored=no
 limit=0
 score=0
 
+game_file="$HOME/.cache/2048.game"
+max_score_file="$HOME/.cache/2048.max-score"
+
 boardRows=4
 boardColumns=4
 
