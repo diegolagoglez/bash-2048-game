@@ -36,6 +36,24 @@ function removeGame() {
 	fi
 }
 
+function loadGame() {
+	if [ -f "$game_file" ]; then
+		old_ifs=$IFS
+		IFS=","
+		local arow=1
+		local acol=1
+		while read; do
+			for value in $REPLY; do
+				board[$arow,$acol]="$value"
+				acol=$(($acol + 1))
+			done
+			arow=$(($arow + 1))
+			acol=1
+		done < "$game_file"
+		IFS=$old_ifs
+	fi
+}
+
 function initBoard() {
 	for x in $(seq 1 $boardRows); do
 		for y in $(seq 1 $boardColumns); do
@@ -464,6 +482,7 @@ function processOptions() {
 function main() {
 	processOptions $@
 	initBoard
+	loadGame
 	while true; do
 		printBoard
 		key=$(readKey)
