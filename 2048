@@ -4,6 +4,7 @@ declare -A board
 
 clear=no
 pretty=no
+colored=no
 limit=0
 
 boardRows=4
@@ -238,6 +239,7 @@ function showCLIHelp() {
 	echo "Options:"
 	echo " -c       Clear the screen on every movement."
 	echo " -p       Pretty graphics."
+	echo " -C       Print colored numbers (still unimplemented)."
 	echo " -l <val> Specifies a maximun game value (where you win)."
 	echo " -h       Show this help and exit."
 	echo
@@ -349,13 +351,18 @@ function printBoard() {
 }
 
 function processOptions() {
-	while getopts ":cl:ph" opt; do
+	while getopts ":cl:pCh" opt; do
 		case "$opt" in
 			c)
 				clear=yes
 			;;
 			p)
 				pretty=yes
+			;;
+			C)
+				colored=yes
+				echo "ERROR: Option to show colored numbers is not implemented." 1>&2
+				exit 1
 			;;
 			l)
 				limit=$OPTARG
