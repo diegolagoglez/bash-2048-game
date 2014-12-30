@@ -16,9 +16,9 @@ boardRows=4
 boardColumns=4
 
 function initBoard() {
-	for i in $(seq 1 $boardRows); do
-		for j in $(seq 1 $boardColumns); do
-			board[$i,$j]=" "
+	for x in $(seq 1 $boardRows); do
+		for y in $(seq 1 $boardColumns); do
+			board[$x,$y]=" "
 		done
 	done
 	newBoardRandomValue
