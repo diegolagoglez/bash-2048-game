@@ -212,8 +212,28 @@ function newBoardRandomValue() {
 	board[$x,$y]=$(randValue)
 }
 
+function countGaps() {
+	local count=0
+	for i in $(seq 1 $boardRows); do
+		for j in $(seq 1 $boardColumns); do
+			if [ "${board[$i,$j]}" == " " ]; then
+				count=$(($count+1))
+			fi
+		done
+	done
+	return $count
+}
+
 function checkNoMoreMoves() {
-	:
+	local moves=$1
+	if [ $moves -gt 0 ]; then
+		countGaps
+		local result=$?
+		if [ $result -gt 0 ]; then
+			return $result
+		fi
+	fi
+	return 0
 }
 
 function checkLimit() {
@@ -406,7 +426,16 @@ function main() {
 		if [ $result -ne 0 ]; then
 			newBoardRandomValue
 		fi
-		checkNoMoreMoves
+		checkNoMoreMoves $result
+		# result=$?
+		# if [ $result -ne 0 ]; then
+		# 	printBoard
+		# 	echo
+		# 	echo " *** No more movements! You lost! ***"
+		# 	echo
+		# 	read -n1 -p "Press any key to continue..."
+		# 	echo
+		# fi
 		if checkLimit; then
 			printBoard
 			echo
