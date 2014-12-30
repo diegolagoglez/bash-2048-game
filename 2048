@@ -7,6 +7,7 @@ date="2014-12-30"
 
 won=no
 clear=no
+start_new_game=no
 pretty=no
 colored=no
 limit=0
@@ -319,6 +320,7 @@ function showCLIHelp() {
 	echo "Usage: $(basename $0) [options]"
 	echo "Options:"
 	echo " -c       Clear the screen on every movement."
+	echo " -n       Start new game (discard saved game)."
 	echo " -p       Pretty graphics."
 	echo " -C       Print colored numbers (still unimplemented)."
 	echo " -l <val> Specifies a maximun game value (where you win)."
@@ -448,10 +450,13 @@ function printBoard() {
 }
 
 function processOptions() {
-	while getopts ":cl:pCh" opt; do
+	while getopts ":cnl:pCh" opt; do
 		case "$opt" in
 			c)
 				clear=yes
+			;;
+			n)
+				start_new_game=yes
 			;;
 			p)
 				pretty=yes
@@ -481,8 +486,11 @@ function processOptions() {
 
 function main() {
 	processOptions $@
-	initBoard
-	loadGame
+	if [ "$start_new_game" == "yes" ]; then
+		initBoard
+	else
+		loadGame
+	fi
 	while true; do
 		printBoard
 		key=$(readKey)
