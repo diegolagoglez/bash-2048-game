@@ -5,6 +5,7 @@ declare -A board
 version=0.0.1
 date="2014-12-30"
 
+won=no
 clear=no
 pretty=no
 colored=no
@@ -326,6 +327,7 @@ function processKey() {
 		;;
 		"n")
 			initBoard
+			won=no
 		;;
 		"c")
 			if [ "$clear" == "no" ]; then
@@ -452,12 +454,15 @@ function main() {
 			echo
 		fi
 		if checkLimit; then
-			printBoard
-			echo
-			echo " *** Congratulations! You Win! ***"
-			echo
-			read -n1 -p "Press any key to continue..."
-			echo
+			if [ "$won" == "no" ]; then
+				printBoard
+				won=yes
+				echo
+				echo " *** Congratulations! You Win! ***"
+				echo
+				read -n1 -p "Press any key to continue..."
+				echo
+			fi
 		fi
 	done
 }
