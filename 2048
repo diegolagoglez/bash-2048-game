@@ -3,6 +3,7 @@
 declare -A board
 
 clear=no
+pretty=no
 limit=0
 
 boardRows=4
@@ -236,6 +237,7 @@ function showCLIHelp() {
 	echo "Usage: $(basename $0) [options]"
 	echo "Options:"
 	echo " -c       Clear the screen on every movement."
+	echo " -p       Pretty graphics."
 	echo " -l <val> Specifies a maximun game value (where you win)."
 	echo " -h       Show this help and exit."
 	echo
@@ -312,22 +314,48 @@ function printBoard() {
 		clear
 		echo "          2048 Game"
 	fi
-	echo "+------+------+------+------+"
+	if [ "$pretty" == "yes" ]; then
+		echo "┌──────┬──────┬──────┬──────┐"
+	else
+		echo "+------+------+------+------+"
+	fi
 	for i in $(seq 1 $boardRows); do
-		echo -n "|"
+		if [ "$pretty" == "yes" ]; then
+				echo -n "│"
+			else
+				echo -n "|"
+			fi
 		for j in $(seq 1 $boardColumns); do
 			printf " %4s " ${board[$i,$j]}
-			echo -n "|"
+			if [ "$pretty" == "yes" ]; then
+				echo -n "│"
+			else
+				echo -n "|"
+			fi
 		done
-		echo -e "\n+------+------+------+------+"
+		if [ $i -lt $boardRows ]; then
+			if [ "$pretty" == "yes" ]; then
+				echo -e "\n├──────┼──────┼──────┼──────┤"
+			else
+				echo -e "\n+------+------+------+------+"
+			fi
+		fi
 	done
+	if [ "$pretty" == "yes" ]; then
+		echo -e "\n└──────┴──────┴──────┴──────┘"
+	else
+		echo -e "\n+------+------+------+------+"
+	fi
 }
 
 function processOptions() {
-	while getopts ":cl:h" opt; do
+	while getopts ":cl:ph" opt; do
 		case "$opt" in
 			c)
 				clear=yes
+			;;
+			p)
+				pretty=yes
 			;;
 			l)
 				limit=$OPTARG
