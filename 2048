@@ -30,6 +30,12 @@ function saveGame() {
 	done
 }
 
+function removeGame() {
+	if [ -f "$game_file" ]; then
+		rm -f "$game_file"
+	fi
+}
+
 function initBoard() {
 	for x in $(seq 1 $boardRows); do
 		for y in $(seq 1 $boardColumns); do
@@ -346,6 +352,7 @@ function processKey() {
 		"n")
 			initBoard
 			won=no
+			removeGame
 		;;
 		"c")
 			if [ "$clear" == "no" ]; then
