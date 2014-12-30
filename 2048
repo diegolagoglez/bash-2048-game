@@ -109,14 +109,39 @@ function moveHorizontally() {
 	done
 }
 
+function sumHorizontally() {
+	local row=$1
+	local direction=$2
+	if [ $direction == 1 ]; then
+		local start=1
+		local end=$boardColumns
+	elif [ $direction == -1 ]; then
+		local start=$boardColumns
+		local end=1
+	else
+		echo "FATAL(sumHorizontally): Invalid direction: $direction" 1>&2
+		exit 1
+	fi
+	for j in $(seq $start $direction $end); do
+		if [ "${board[$row,$j]}" != " " -a $(($j + $direction)) -lt $(($start + $end)) -a "${board[$row,$(($j + $direction))]}" == "${board[$row,$j]}" ]; then
+			board[$row,$j]=$((${board[$row,$j]} + ${board[$row,$(($j + $direction))]}))
+			board[$row,$(($j + $direction))]=" "
+		fi
+	done
+}
+
 function moveRight() {
 	for i in $(seq 1 $boardRows); do
+		moveHorizontally $i -1
+		sumHorizontally $i -1
 		moveHorizontally $i -1
 	done
 }
 
 function moveLeft() {
 	for i in $(seq 1 $boardRows); do
+		moveHorizontally $i 1
+		sumHorizontally $i 1
 		moveHorizontally $i 1
 	done
 }
@@ -218,6 +243,8 @@ function main() {
 		printBoard
 		key=$(readKey)
 		processKey $key
+		newBoardRandomValue
+		checkNoMoreMoves
 	done
 }
 
