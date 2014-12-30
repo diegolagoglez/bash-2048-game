@@ -45,12 +45,41 @@ function readKey() {
 	esac
 }
 
+function moveVertically() {
+	local col=$1
+	local direction=$2
+	if [ $direction == 1 ]; then
+		local start=1
+		local end=$boardRows
+	elif [ $direction == -1 ]; then
+		local start=$boardRows
+		local end=1
+	else
+		echo "FATAL(moveVertically): Invalid direction: $direction" 1>&2
+		exit 1
+	fi
+	for i in $(seq $start $direction $end); do
+		if [ "${board[$i,$col]}" != " " ]; then
+			local next=$(($i - $direction))
+			while [ "${board[$next,$col]}" == " " ]; do
+				board[$next,$col]=${board[$(($next + $direction)),$col]}
+				board[$(($next + $direction)),$col]=" "
+				next=$(($next - $direction))
+			done
+		fi
+	done
+}
+
 function moveUp() {
-	echo up
+	for i in $(seq 1 $boardColumns); do
+		moveVertically $i 1
+	done
 }
 
 function moveDown() {
-	echo down
+	for i in $(seq 1 $boardColumns); do
+		moveVertically $i -1
+	done
 }
 
 function moveHorizontally() {
@@ -63,7 +92,7 @@ function moveHorizontally() {
 		local start=$boardColumns
 		local end=1
 	else
-		echo "FATAL: Invalid direction: $direction" 1>&2
+		echo "FATAL(moveHorizontally): Invalid direction: $direction" 1>&2
 		exit 1
 	fi
 	for j in $(seq $start $direction $end); do
