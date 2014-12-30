@@ -311,6 +311,19 @@ function randValue() {
 	echo 2
 }
 
+function printNumber() {
+	local number=$1
+	if [ "$colored" == "yes" ]; then
+		# Escape characteres to indicate the color.
+		:
+	fi
+	printf " %4s " $number
+	if [ "$colored" == "yes" ]; then
+		# Reset color.
+		:
+	fi
+}
+
 function printBoard() {
 	if [ "$clear" == "yes" ]; then
 		clear
@@ -328,7 +341,7 @@ function printBoard() {
 				echo -n "|"
 			fi
 		for j in $(seq 1 $boardColumns); do
-			printf " %4s " ${board[$i,$j]}
+			printNumber ${board[$i,$j]}
 			if [ "$pretty" == "yes" ]; then
 				echo -n "│"
 			else
