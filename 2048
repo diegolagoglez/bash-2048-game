@@ -254,11 +254,13 @@ function showHelp() {
 	echo "Keys:"
 	echo "Use arrow keys to move numbers."
 	echo "Use 'n' to create a new game."
+	echo "Use 'c' to switch between clear/no clear."
 	echo "Use 'q' to quit."
 	echo "Use 'h' to show this help."
 	if [ -z "$1" ]; then
 		echo
 		read -n 1 -p "Press any key to continue..."
+		echo
 	fi
 }
 
@@ -283,6 +285,14 @@ function processKey() {
 		"n")
 			initBoard
 		;;
+		"c")
+			if [ "$clear" == "no" ]; then
+				clear=yes
+			else
+				clear=no
+			fi
+			printBoard
+		;;
 		"h")
 			showHelp
 		;;
@@ -300,6 +310,7 @@ function randValue() {
 function printBoard() {
 	if [ "$clear" == "yes" ]; then
 		clear
+		echo "          2048 Game"
 	fi
 	echo "-----------------------------"
 	for i in $(seq 1 $boardRows); do
