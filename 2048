@@ -358,6 +358,7 @@ function processKey() {
 			showHelp
 		;;
 		"q")
+			saveGame
 			exit 1
 		;;
 	esac
