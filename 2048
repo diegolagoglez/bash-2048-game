@@ -312,14 +312,14 @@ function printBoard() {
 		clear
 		echo "          2048 Game"
 	fi
-	echo "-----------------------------"
+	echo "+------+------+------+------+"
 	for i in $(seq 1 $boardRows); do
 		echo -n "|"
 		for j in $(seq 1 $boardColumns); do
 			printf " %4s " ${board[$i,$j]}
 			echo -n "|"
 		done
-		echo -e "\n-----------------------------"
+		echo -e "\n+------+------+------+------+"
 	done
 }
 
