@@ -233,8 +233,20 @@ function countGaps() {
 function noMoreMoves() {
 	if countGaps; then
 		# If no gaps, check if can sum any value.
-		# TODO: Implement this.
-		return 0
+		local movements=0
+		for i in $(seq 1 $boardRows); do
+			sumHorizontally $i 1 dryrun
+			movements=$(($movements + $?))
+			sumHorizontally $i -1 dryrun
+			movements=$(($movements + $?))
+		done
+		for i in $(seq 1 $boardColumns); do
+			sumVertically $i 1 dryrun
+			movements=$(($movements + $?))
+			sumVertically $i -1 dryrun
+			movements=$(($movements + $?))
+		done
+		return $movements
 	fi
 	return 1
 }
