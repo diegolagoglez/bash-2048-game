@@ -2,6 +2,8 @@
 
 declare -A board
 
+clear=no
+
 boardRows=4
 boardColumns=4
 
@@ -119,10 +121,25 @@ function moveLeft() {
 	done
 }
 
-function showHelp() {
-	echo
+function showCLIHelp() {
 	echo "2048 Game written in BASH"
 	echo "Diego Lago González <diego.lago.gonzalez@gmail.com>"
+	echo "Usage: $(basename $0) [options]"
+	echo "Options:"
+	echo " -c   Clear the screen."
+	echo " -h   Show this help and exit."
+	echo
+	echo "During game:"
+	showHelp nocredits
+	exit 1
+}
+
+function showHelp() {
+	if [ -z "$1" ]; then
+		echo
+		echo "2048 Game written in BASH"
+		echo "Diego Lago González <diego.lago.gonzalez@gmail.com>"
+	fi
 	echo
 	echo "Keys:"
 	echo "Use arrow keys to move numbers."
@@ -161,6 +178,9 @@ function randValue() {
 }
 
 function printBoard() {
+	if [ "$clear" == "yes" ]; then
+		clear
+	fi
 	echo "-------------------------"
 	for i in $(seq 1 $boardRows); do
 		echo -n "|"
@@ -172,7 +192,21 @@ function printBoard() {
 	done
 }
 
+function processOptions() {
+	while getopts ":ch" opt; do
+		case "$opt" in
+			c)
+				clear=yes
+			;;
+			h)
+				showCLIHelp
+			;;
+		esac
+	done
+}
+
 function main() {
+	processOptions $@
 	initBoard
 	while true; do
 		printBoard
