@@ -224,16 +224,13 @@ function countGaps() {
 	return $count
 }
 
-function checkNoMoreMoves() {
-	local moves=$1
-	if [ $moves -gt 0 ]; then
-		countGaps
-		local result=$?
-		if [ $result -gt 0 ]; then
-			return $result
-		fi
+function noMoreMoves() {
+	if countGaps; then
+		# If no gaps, check if can sum any value.
+		# TODO: Implement this.
+		return 0
 	fi
-	return 0
+	return 1
 }
 
 function checkLimit() {
@@ -426,16 +423,14 @@ function main() {
 		if [ $result -ne 0 ]; then
 			newBoardRandomValue
 		fi
-		checkNoMoreMoves $result
-		# result=$?
-		# if [ $result -ne 0 ]; then
-		# 	printBoard
-		# 	echo
-		# 	echo " *** No more movements! You lost! ***"
-		# 	echo
-		# 	read -n1 -p "Press any key to continue..."
-		# 	echo
-		# fi
+		if noMoreMoves; then
+			printBoard
+			echo
+			echo " *** No more movements! You lost! ***"
+			echo
+			read -n1 -p "Press any key to continue..."
+			echo
+		fi
 		if checkLimit; then
 			printBoard
 			echo
